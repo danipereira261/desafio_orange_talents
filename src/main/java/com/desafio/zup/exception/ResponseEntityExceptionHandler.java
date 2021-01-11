@@ -14,7 +14,8 @@ public class ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidParamException.class)
     public ResponseEntity<ErroResponse> invalidFile(InvalidParamException e, HttpServletRequest request) {
-        ErroResponse err = new ErroResponse(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Dados Duplicados", e.getMessage(), request.getRequestURI());
+        ErroResponse err = new ErroResponse(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Dados Duplicados",
+                e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
@@ -27,7 +28,11 @@ public class ResponseEntityExceptionHandler {
         String nMsg = msg.replace(" default message [", "").replace("]]", "");
 
         ErroResponse err = new ErroResponse(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
-                "Parâmetro inválido. Todos os parâmetro são obrigatórios, não podem ser nulos e precisam ser válidos", nMsg, request.getRequestURI());
+                "Parâmetro inválido. Todos os parâmetro são obrigatórios, não podem ser nulos e precisam ser válidos",
+                nMsg, request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 }
+
+
+

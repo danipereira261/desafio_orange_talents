@@ -2,13 +2,13 @@ package com.desafio.zup.controller;
 
 
 import com.desafio.zup.dto.DadosPessoaisDto;
+import com.desafio.zup.exception.InvalidParamException;
 import com.desafio.zup.model.DadosPessoaisModel;
 import com.desafio.zup.repository.DadosPessoaisRepository;
-import jakarta.validation.Valid;
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import javax.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ public class DadosPessoaisController {
     private DadosPessoaisRepository repository;
 
     @PostMapping(value = "/cad")
-    public ResponseEntity<DadosPessoaisDto> cadastrar(@RequestBody @Valid DadosPessoaisDto dadosPessoaisDto) {
+    public ResponseEntity<DadosPessoaisDto> cadastrar(@RequestBody @Valid DadosPessoaisDto dadosPessoaisDto) throws InvalidParamException {
 
         DadosPessoaisModel data = new DadosPessoaisModel();
         data.setNome(dadosPessoaisDto.getNome());
@@ -33,10 +33,10 @@ public class DadosPessoaisController {
         try {
             repository.save(data);
         }catch (Exception e){
-            throw new PSQLException("Dados duplicados");
+            throw new InvalidParamException("Dados duplicados");
         }
+
         System.out.println(dadosPessoaisDto);
         return new ResponseEntity<DadosPessoaisDto>(HttpStatus.OK);
-
     }
 }

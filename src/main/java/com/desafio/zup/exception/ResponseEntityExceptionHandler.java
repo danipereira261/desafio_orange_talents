@@ -13,24 +13,38 @@ import java.util.Arrays;
 public class ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidParamException.class)
+
     public ResponseEntity<ErroResponse> invalidFile(InvalidParamException e, HttpServletRequest request) {
-        ErroResponse err = new ErroResponse(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Dados Duplicados",
-                e.getMessage(), request.getRequestURI());
+        ErroResponse err = new ErroResponse(
+                System.currentTimeMillis(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Dados Duplicados",
+                e.getMessage(),
+                request.getRequestURI());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> invalidArgument(MethodArgumentNotValidException e, HttpServletRequest request) {
 
+        String nMsg = tratamentoDeMensagem(e);
+
+        ErroResponse err = new ErroResponse(
+                System.currentTimeMillis(),
+                HttpStatus.BAD_REQUEST.value(),
+                "Parâmetro inválido. Todos os parâmetro são obrigatórios, não podem ser nulos e precisam ser válidos",
+                nMsg,
+                request.getRequestURI()
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+    }
+
+    private String tratamentoDeMensagem(MethodArgumentNotValidException e) {
         String[] textoSeparado = e.getMessage().split(";");
         long count = Arrays.stream(textoSeparado).count();
         String msg = Arrays.stream(textoSeparado).skip(count - 1).findFirst().get();
         String nMsg = msg.replace(" default message [", "").replace("]]", "");
-
-        ErroResponse err = new ErroResponse(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
-                "Parâmetro inválido. Todos os parâmetro são obrigatórios, não podem ser nulos e precisam ser válidos",
-                nMsg, request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+        return nMsg;
     }
 }
 

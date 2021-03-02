@@ -15,15 +15,14 @@ public class DadosPessoaisService {
 
     public void process(DadosPessoaisDto dadosPessoaisDto) throws InvalidParamException {
 
-
-        DadosPessoaisModel data = new DadosPessoaisModel();
-        data.setNome(dadosPessoaisDto.getNome());
-        data.setCpf(dadosPessoaisDto.getCpf());
-        data.setEmail(dadosPessoaisDto.getEmail());
-        data.setDataNascimento(dadosPessoaisDto.getDataNascimento());
+        DadosPessoaisModel dataModel = new DadosPessoaisModel();
+        dataModel.setNome(dadosPessoaisDto.getNome());
+        dataModel.setCpf(dadosPessoaisDto.getCpf());
+        dataModel.setEmail(dadosPessoaisDto.getEmail());
+        dataModel.setDataNascimento(dadosPessoaisDto.getDataNascimento());
 
         try {
-            repository.save(data);
+            repository.save(dataModel);
         } catch (Exception e) {
             throw new InvalidParamException("Dados duplicados");
         }
